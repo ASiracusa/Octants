@@ -20,6 +20,9 @@ public class EditorManager : MonoBehaviour
     private Vector2Int[] reflectorColors;
     private bool[][] reflectorDims;
 
+    private float cameraCurrentRot = 0;
+    private float cameraTargetRot = 0;
+
     void Start()
     {
         // Creates a generic floor out of ground tiles
@@ -48,8 +51,16 @@ public class EditorManager : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        
+        if (Input.GetKey(KeyCode.Q)) {
+            cameraTargetRot += 0.05f;
+        }
+        if (Input.GetKey(KeyCode.E)) {
+            cameraTargetRot -= 0.05f;
+        }
+        cameraCurrentRot = Mathf.Lerp(cameraCurrentRot, cameraTargetRot, 0.1f);
+        Camera.main.transform.position = new Vector3(10 * Mathf.Sin(cameraCurrentRot), 5, 10 * Mathf.Cos(cameraCurrentRot));
+        Camera.main.transform.eulerAngles = new Vector3(30, 180 + 360 * cameraCurrentRot / (2 * Mathf.PI), 0);
     }
 }
