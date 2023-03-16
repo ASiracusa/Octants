@@ -2,43 +2,53 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EditorManager : MonoBehaviour
 {
+    // LEVEL SETUP
     private Vector3Int levelDims;
-    private GameObject[,,] groundGos;
     private Vector3 zeroCorner;
 
+    // GROUND
+    private GameObject[,,] groundGos;
+    private GameObject gsPrefab;
+    private Material evenMat;
+    private Material oddMat;
+    private Transform groundParent;
+
+    // PLAYER
     private Vector3Int playerSpace;
     private int playerColor;
     private int playerDir;
 
+    // GOALS
     private int sigilCount;
     private List<Vector3Int> sigilSpaces;
     private List<int> sigilColors;
 
+    // REFLECTORS
     private int reflectorCount;
     private List<Vector3Int> reflectorSpaces;
     private List<Vector2Int> reflectorColors;
     private List<bool[]> reflectorDims;
 
+    // CAMERA
     private float cameraCurrentRot = 0;
     private float cameraTargetRot = 0;
-
-    private GameObject gsPrefab;
-    private Material evenMat;
-    private Material oddMat;
-    private Transform groundParent;
     
+    // CURSOR
     private GameObject cursorCube;
     private Vector3Int cursorPos;
     private bool selecting;
     private bool leftSelect;
     private Vector3Int selectPos;
+    private int[] selectedColors;
 
     void Start()
     {
         cursorCube = GameObject.Find("CursorCube");
+        selectedColors = new int[2];
 
         // Creates a generic floor out of ground tiles
         levelDims = new Vector3Int(15, 9, 15);
@@ -97,6 +107,38 @@ public class EditorManager : MonoBehaviour
     }
 
     void Update() {
+
+        // Change color
+        int colorIndex = Input.GetKey(KeyCode.LeftShift) ? 1 : 0;
+        TMP_Text[] colorTexts = {GameObject.Find("Canvas/Color1Text").GetComponent<TMP_Text>(), GameObject.Find("Canvas/Color2Text").GetComponent<TMP_Text>()};
+        if (Input.GetKey(KeyCode.Alpha1)) {
+            selectedColors[colorIndex] = -1;
+            colorTexts[colorIndex].text = "COLOR " + (colorIndex+1).ToString() + ": black";
+        }
+        if (Input.GetKey(KeyCode.Alpha2)) {
+            selectedColors[colorIndex] = 0;
+            colorTexts[colorIndex].text = "COLOR " + (colorIndex+1).ToString() + ": white";
+        }
+        if (Input.GetKey(KeyCode.Alpha3)) {
+            selectedColors[colorIndex] = 1;
+            colorTexts[colorIndex].text = "COLOR " + (colorIndex+1).ToString() + ": 1";
+        }
+        if (Input.GetKey(KeyCode.Alpha4)) {
+            selectedColors[colorIndex] = 2;
+            colorTexts[colorIndex].text = "COLOR " + (colorIndex+1).ToString() + ": 2";
+        }
+        if (Input.GetKey(KeyCode.Alpha5)) {
+            selectedColors[colorIndex] = 3;
+            colorTexts[colorIndex].text = "COLOR " + (colorIndex+1).ToString() + ": 3";
+        }
+        if (Input.GetKey(KeyCode.Alpha6)) {
+            selectedColors[colorIndex] = 4;
+            colorTexts[colorIndex].text = "COLOR " + (colorIndex+1).ToString() + ": 4";
+        }
+        if (Input.GetKey(KeyCode.Alpha7)) {
+            selectedColors[colorIndex] = 5;
+            colorTexts[colorIndex].text = "COLOR " + (colorIndex+1).ToString() + ": 5";
+        }
 
         // Adding and removing ground tiles
         if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && cursorCube.activeSelf) {
